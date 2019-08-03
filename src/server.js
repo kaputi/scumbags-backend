@@ -32,7 +32,7 @@ app.use(
 )
 app.use(bodyParser.json())
 
-app.use(express.static(__dirname + './../../frontend/build/index.html'))
+app.use(express.static(__dirname + './../../frontend/build/'))
 
 app.use('/api/users', users)
 app.use('/api/products', products)
