@@ -1,4 +1,4 @@
-process.title = 'scumbags-back'
+// process.title = 'scumbags-back'
 
 import express from 'express'
 import logger from 'morgan'
@@ -32,7 +32,7 @@ app.use(
 )
 app.use(bodyParser.json())
 
-// app.use(express.static(__dirname + './../../frontend/build/index.html'))
+app.use(express.static(__dirname + './../../frontend/build/index.html'))
 
 app.use('/api/users', users)
 app.use('/api/products', products)
