@@ -1,0 +1,40 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true
+  },
+  // "plugins": ["prettier"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true
+    }
+  },
+
+  "extends": ["eslint:recommended", "prettier"],
+
+  "rules": {
+    // "no-multi-spaces": "error",
+    "strict": ["error", "never"],
+    // "no-use-before-define": "error",
+    //"class-methods-use-this": "off",
+    "prefer-const": "warn",
+    "comma-dangle": ["error", "always-multiline"],
+    // "no-console": "off",
+    "arrow-body-style": "warn",
+    "max-len": [
+      "error",
+      {
+        "code": 80,
+        "ignoreComments": true,
+        "ignoreTrailingComments": true,
+        "ignoreUrls": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreRegExpLiterals": true
+      }
+    ]
+  }
+}

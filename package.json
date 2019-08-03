@@ -1,0 +1,38 @@
+{
+  "name": "scumbags-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node src/server/server.js",
+    "stop": "pkill scumbags-back",
+    "build": "babel src --out-dir dist",
+    "serve": "node dist/server/server.js",
+    "lint": "eslint . ; exit 0",
+    "lint-fix": "eslint . --fix ; exit 0"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.1.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.0",
+    "nodemon": "^1.19.1",
+    "prettier": "^1.18.2",
+    "prettier-eslint": "^9.0.0"
+  },
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.6.6",
+    "morgan": "^1.9.1"
+  }
+}
