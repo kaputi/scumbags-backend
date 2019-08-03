@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/server/server.js",
+    "start": "nodemon --exec babel-node src/server.js",
     "stop": "pkill scumbags-back",
     "build": "babel src --out-dir dist",
-    "serve": "node dist/server/server.js",
+    "serve": "node dist/server.js",
     "lint": "eslint . ; exit 0",
     "lint-fix": "eslint . --fix ; exit 0"
   },
@@ -19,6 +19,7 @@
     "@babel/node": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "babel-eslint": "^10.0.2",
+    "babel-polyfill": "^6.26.0",
     "eslint": "^6.1.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "^2.18.2",
