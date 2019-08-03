@@ -32,10 +32,10 @@ app.use(
 )
 app.use(bodyParser.json())
 
-app.use(express.static(__dirname + './../../frontend/index.html')) //TODO: point to serves react app
+// app.use(express.static(__dirname + './../../frontend/build/index.html'))
 
-app.use('api/users', users)
-app.use('api/products', products)
+app.use('/api/users', users)
+app.use('/api/products', products)
 
 app.use('*', (req, res, next) => {
   const err = new Error('Page not found')
