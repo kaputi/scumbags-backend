@@ -3,6 +3,7 @@
 import express from 'express'
 import logger from 'morgan'
 import bodyParser from 'body-parser'
+import cors from 'cors'
 
 //routes
 import users from './routes/users.route'
@@ -15,6 +16,8 @@ import secretKey from './config/jwt.key'
 const PORT = process.env.PORT || '9000'
 
 const app = express()
+
+app.use(cors())
 
 app.set('secretKey', secretKey) // jwt secret token
 
