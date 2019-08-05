@@ -4,8 +4,6 @@ import usersModel from '../models/users.model'
 
 import response from '../utils/response'
 
-// TODO: errors
-
 const create = (req, res, next) => {
   const { firstName, lastName, email, password } = req.body
   usersModel.create({ firstName, lastName, email, password }, (err) => {
@@ -29,12 +27,12 @@ const authenticate = (req, res, next) => {
       }
       const passwordMatch = await bcrypt.compare(password, userInfo.password)
       if (passwordMatch) {
-        const token = jwt.sign(
-          { id: userInfo._id }, //TODO: no se si poner el role aqui;;;;; eslint-disable-line no-underscore-dangle
-          req.app.get('secretKey'),
-          { expiresIn: '1h' }
-        )
-        res.json(response('User found', { user: userInfo, token })) //TODO: remove password from userinfo probablemente los docs de findone
+        const token = jwt.sign({ id: userInfo._id }, req.app.get('secretKey'), {
+          expiresIn: '1h',
+        })
+        const user = { ...userInfo._doc, token, password: null }
+
+        res.json(response('User found', user))
       } else {
         const error = new Error('Invalid password')
         return next(error)
@@ -46,7 +44,7 @@ const authenticate = (req, res, next) => {
 const update = (req, res, next) => {
   const { id } = req
 
-  if (!id) return next() //TODO:  error
+  if (!id) return next(new Error('Not logged in'))
 
   usersModel.findOne({ id }, (err) => {
     if (err) {
@@ -65,7 +63,8 @@ const update = (req, res, next) => {
         updateQuery,
         { new: true },
         (err, userInfo) => {
-          if (!err) res.json(response('User updated', userInfo)) //TODO: remove pass from userInfo
+          const user = { ...userInfo._doc, password: null }
+          if (!err) res.json(response('User updated', user))
 
           return next(err)
         }
@@ -91,23 +90,27 @@ const permissions = async (req, res, next) => {
     return next(err)
   }
 
-  const { role } = req.body
-  if (!role) {
-    const err = new Error('no role')
-    return next(err)
-  }
+  const { role, user } = req.body
+  if (!role) return next(new Error('no role'))
 
-  // TODO: esto no deberia modificar tu id sino uno que deberias pasar en el body con role
-  usersModel.findByIdAndUpdate(id, { role }, { new: true }, (err, userInfo) => {
-    if (!err) res.json(response('User updated', userInfo)) //TODO: remove pass from userInfo
+  if (!user) return next(new Error('No user'))
 
-    return next(err)
-  })
+  usersModel.findByIdAndUpdate(
+    user,
+    { role },
+    { new: true },
+    (err, userInfo) => {
+      const user = { ...userInfo._doc, password: null }
+      if (!err) res.json(response('User updated', user))
+
+      return next(err)
+    }
+  )
 }
 
 const list = async (req, res, next) => {
   const { id } = req
-  if (!id) return next() //TODO: error
+  if (!id) return next(new Error('Not logged in'))
   let isAdmin = false
 
   await usersModel.findOne({ _id: id }, (err, userInfo) => {
