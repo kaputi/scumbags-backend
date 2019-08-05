@@ -1,12 +1,17 @@
 import mongoose from 'mongoose'
 
 // database
-const mongoDB = 'mongodb://localhost:27017/scumbags'
+const user = 'scumbags-admin'
+const pass = 'scumbags' // TODO: set proper password before going live
+const port = '27017'
+const mongoDB = `mongodb://localhost:${port}/scumbags`
 
 mongoose.connect(mongoDB, {
-  user: 'scumbags-admin',
-  pass: 'scumbags', // TODO: set proper password before going live
+  user,
+  pass,
   useNewUrlParser: true,
+  keepAlive: true,
+  keepAliveInitialDelay: 300000,
 })
 mongoose.Promise = global.Promise
 
