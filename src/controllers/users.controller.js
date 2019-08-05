@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import usersModel from '../models/users.model'
 
 import response from '../utils/response'
+import checkPermissions from '../utils/checkPermissions'
 
 const create = (req, res, next) => {
   const { firstName, lastName, email, password } = req.body
@@ -76,14 +77,9 @@ const update = (req, res, next) => {
 const permissions = async (req, res, next) => {
   const { id } = req
 
-  if (!id) return next()
+  if (!id) return next(new Error('Not logged in'))
 
-  let isAdmin = false
-
-  await usersModel.findOne({ _id: id }, (err, userInfo) => {
-    if (err) return next(err)
-    if (userInfo.role === 'admin') isAdmin = true
-  })
+  const isAdmin = await checkPermissions(id)
 
   if (!isAdmin) {
     const err = new Error('Not enough permissions')
@@ -111,12 +107,8 @@ const permissions = async (req, res, next) => {
 const list = async (req, res, next) => {
   const { id } = req
   if (!id) return next(new Error('Not logged in'))
-  let isAdmin = false
 
-  await usersModel.findOne({ _id: id }, (err, userInfo) => {
-    if (err) return next(err)
-    if (userInfo.role === 'admin') isAdmin = true
-  })
+  const isAdmin = await checkPermissions(id)
 
   if (!isAdmin) {
     const err = new Error('Not enough permissions')

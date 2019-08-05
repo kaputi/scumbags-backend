@@ -1,21 +1,13 @@
 import productsModel from '../models/products.model'
-import usersModel from '../models/users.model'
 import response from '../utils/response'
-
-// TODO: test for errors
+import checkPermissions from '../utils/checkPermissions'
 
 const create = async (req, res, next) => {
-  // TODO:  check permissions should be a imported function(users will use it as well)
   const { id } = req
 
-  if (!id) return next()
+  if (!id) return next(new Error('Not logged in'))
 
-  let isAdmin = false
-
-  await usersModel.findOne({ _id: id }, (err, userInfo) => {
-    if (err) return next(err)
-    if (userInfo.role === 'admin') isAdmin = true
-  })
+  const isAdmin = await checkPermissions(id)
 
   if (!isAdmin) {
     const err = new Error('Not enough permissions')
@@ -45,14 +37,9 @@ const create = async (req, res, next) => {
 const update = async (req, res, next) => {
   const { id } = req
 
-  if (!id) return next()
+  if (!id) return next(new Error('Not logged in'))
 
-  let isAdmin = false
-
-  await usersModel.findOne({ _id: id }, (err, userInfo) => {
-    if (err) return next(err)
-    if (userInfo.role === 'admin') isAdmin = true
-  })
+  const isAdmin = await checkPermissions(id)
 
   if (!isAdmin) {
     const err = new Error('Not enough permissions')
@@ -96,14 +83,9 @@ const update = async (req, res, next) => {
 const remove = async (req, res, next) => {
   const { id } = req
 
-  if (!id) return next()
+  if (!id) return next(new Error('Not logged in'))
 
-  let isAdmin = false
-
-  await usersModel.findOne({ _id: id }, (err, userInfo) => {
-    if (err) return next(err)
-    if (userInfo.role === 'admin') isAdmin = true
-  })
+  const isAdmin = await checkPermissions(id)
 
   if (!isAdmin) {
     const err = new Error('Not enough permissions')
@@ -124,7 +106,7 @@ const getProductsList = (req, res, next) => {
   productsModel.find(req.query, (err, info) => {
     if (err) return next(err)
     if (info.length === 0) return next(new Error('No products found'))
-    res.json(response('Products found', info))
+    res.json(response('Products found', info)) // TODO: remove cost if not admin
   })
 }
 
@@ -134,7 +116,7 @@ const getProductInfo = (req, res, next) => {
   productsModel.findById(id, (err, info) => {
     if (err) return next(err)
     if (info.length === 0) return next(new Error('No product found'))
-    res.json(response('Product found', info))
+    res.json(response('Product found', info)) // TODO: remove cost if not admin
   })
 }
 
